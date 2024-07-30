@@ -1,8 +1,9 @@
 'use client';
 import { Box, Stack, Typography, Button, Modal, TextField } from "@mui/material";
 import {firestore} from '@/firebase'
-import {collection, query, getDocs} from 'firebase/firestore'
+import {collection, query, getDocs, setDoc, doc, deleteDoc, getDoc, count} from 'firebase/firestore'
 import { useEffect, useState } from "react";
+
 
 export default function Home() {
   const [pantry, setPantry] = useState([])
@@ -22,22 +23,58 @@ export default function Home() {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 3,
   };
 
 
+  const updatePantry = async () => {
+    const snapshot = query(collection(firestore, 'pantry'))
+    const docs = await getDocs(snapshot)
+    const pantrylist = []
+    docs.forEach(doc => {
+      pantrylist.push({"name": doc.id, ...doc.data()})
+    })
+    console.log(pantrylist)
+    setPantry(pantrylist)
+  }
+
+
   useEffect(() => {
-    const updatePantry = async () => {
-      const snapshot = query(collection(firestore, 'pantry'))
-      const docs = await getDocs(snapshot)
-      const pantrylist = []
-      docs.forEach(doc => {
-        pantrylist.push(doc.id)
-      })
-      console.log(pantrylist)
-      setPantry(pantrylist)
-    }
     updatePantry()
   }, [])
+
+
+  const addItem = async (item) => {
+    const docRef = doc(collection(firestore, 'pantry'), item)
+    const docSnap = await getDoc(docRef)
+    if(docSnap.exists()) {
+      const {count} = docSnap.data()
+      await setDoc(docRef, {count: count + 1})
+    }
+    else{
+      await setDoc(docRef, {count: 1})
+    }
+    await updatePantry()
+  }
+
+
+  const removeItem = async (item) => {
+    const docRef = doc(collection(firestore, 'pantry'), item)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) {
+      const {count} = docSnap.data()
+      if(count === 1) {
+        await deleteDoc(docRef)
+      }
+      else {
+        await setDoc(docRef, {count: count - 1})
+      }
+    }
+    await updatePantry()
+  }
+
 
   return (
     <Box 
@@ -59,9 +96,20 @@ export default function Home() {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add Item
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <Stack widthd="100%" direction={'row'} spacing={2}>
+            <TextField id="outlined-basic" label="Item" variant="outlined" fullWidth
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
+            />
+            <Button 
+            variant="outlined"
+            onClick={() => {
+              addItem(itemName)
+              setItemName('')
+              handleClose()
+            }}
+            >Add</Button>
+          </Stack>
         </Box>
       </Modal>
       <Button variant="contained" onClick={handleOpen}>Add</Button>
@@ -83,10 +131,6 @@ export default function Home() {
           >
             Pantry Items
           </Typography>
-          <Stack widthd="100%" height="300px" direction={'row'} spacing={2}>
-            <TextField id="outlined-basic" label="Item" variant="outlined" />
-            <Button variant="contained">Search</Button>
-          </Stack>
         </Box>
         <Stack 
         width="800px" 
@@ -94,24 +138,29 @@ export default function Home() {
         spacing={2} 
         overflow={'auto'} 
         >
-          {pantry.map((i) => (
-            <Box
-              key={i}
-              width="100%"
-              minHeight="150px"
-              display={'flex'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              bgcolor={'#f0f0f0'}
-            >
-              <Typography
-                variant="h3"
-                color={'#333'}
-                textAlign={'center'}
+          {pantry.map(({name, count}) => (
+              <Box
+                key={name}
+                width="100%"
+                minHeight="150px"
+                display={'flex'}
+                justifyContent={'space-between'}
+                paddingX={5}
+                alignItems={'center'}
+                bgcolor={'#f0f0f0'}
               >
-                {i.charAt(0).toUpperCase() + i.slice(1)}
-              </Typography>
-            </Box>
+                <Typography
+                  variant="h3"
+                  color={'#333'}
+                  textAlign={'center'}
+                >
+                  {name.charAt(0).toUpperCase() + name.slice(1)}
+                </Typography>
+                <Typography variant="h3" color={'#333'} textAlign={'center'}>
+                  Quantity: {count}
+                </Typography>
+                <Button variant="contained" onClick={() => removeItem(name)}>Remove</Button>
+              </Box>
           ))}
         </Stack>
       </Box>
