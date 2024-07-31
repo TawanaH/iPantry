@@ -1,7 +1,8 @@
 'use client';
-import { Box, Stack, Typography, Button, Modal, TextField } from "@mui/material";
+import { Box, Stack, Typography, Button, Modal, TextField, AppBar, Toolbar, Menu, Container, MenuItem} from "@mui/material";
+import { MenuIcon, RestaurantIcon} from '@mui/icons-material'
 import {firestore} from '@/firebase'
-import {collection, query, getDocs, setDoc, doc, deleteDoc, getDoc, count} from 'firebase/firestore'
+import {collection, query, getDocs, setDoc, doc, deleteDoc, getDoc, } from 'firebase/firestore'
 import { useEffect, useState } from "react";
 
 
@@ -10,7 +11,18 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [itemName, setItemName] = useState('')
+  const [itemName, setItemName] = useState('');
+  const pages = ['Pantries'];
+
+  const [anchorElNav, setAnchorElNav] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
 
 
   const style = {
@@ -81,11 +93,20 @@ export default function Home() {
     width="100vw"
     height="100vh"
     display={"flex"}
-    justifyContent={"center"}
     alignItems={"center"}
     flexDirection={'column'}
     gap={2}
-    >
+    > 
+      <Box
+        width="100vw"
+        height="10vw"
+        display={"flex"}
+        alignItems={"center"}
+        flexDirection={'column'}
+      >
+      <ResponsiveAppBar></ResponsiveAppBar>
+      </Box>
+      
       <Modal
         open={open}
         onClose={handleClose}
@@ -142,7 +163,7 @@ export default function Home() {
               <Box
                 key={name}
                 width="100%"
-                minHeight="150px"
+                minHeight="100px"
                 display={'flex'}
                 justifyContent={'space-between'}
                 paddingX={5}
@@ -156,14 +177,141 @@ export default function Home() {
                 >
                   {name.charAt(0).toUpperCase() + name.slice(1)}
                 </Typography>
-                <Typography variant="h3" color={'#333'} textAlign={'center'}>
-                  Quantity: {count}
-                </Typography>
-                <Button variant="contained" onClick={() => removeItem(name)}>Remove</Button>
+                <Box
+                display={'flex'}
+                >
+                  <Button variant="contained" onClick={() => addItem(name)}>+</Button>
+                  <Typography 
+                  variant="h3" 
+                  color={'#333'} 
+                  textAlign={'center'} 
+                  paddingX={2}
+                  border={'1px solid #333'}
+                  borderRadius={1}
+                  >
+                    {count}
+                  </Typography>
+                  <Button variant="contained" onClick={() => removeItem(name)}>-</Button>
+                </Box>
               </Box>
           ))}
         </Stack>
       </Box>
     </Box>
+  );
+}
+
+
+
+
+
+function ResponsiveAppBar() {
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  
+
+  return (
+    <AppBar position="static">
+      <Container 
+        maxWidth="fixed" 
+        sx={{ backgroundColor: '#203354'}}
+        >
+        <Toolbar disableGutters>
+          <RestaurantIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 190,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Pantry Tracker
+          </Typography>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <RestaurantIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Pantry Tracker
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
