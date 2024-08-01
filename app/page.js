@@ -124,7 +124,9 @@ export default function Home() {
       </Modal>
       <Button variant="contained" onClick={handleOpen} sx={{ backgroundColor: '#203354'}}>Add</Button>
       <Box
-        border={'1px solid #333'}
+        border={'1px solid #343c4a'}
+        padding='10px'
+        borderRadius='20px' //Radius of tabs
       >
         <Box 
         width="800px" 
@@ -133,6 +135,8 @@ export default function Home() {
         display={'flex'} 
         justifyContent={'center'} 
         alignItems={'center'}
+        marginBottom='10px'
+        borderRadius='20px' //Radius of tabs
         > 
           <Typography
             variant="h2"
@@ -158,6 +162,7 @@ export default function Home() {
                 paddingX={5}
                 alignItems={'center'}
                 bgcolor={'#f0f0f0'}
+                borderRadius='20px' //Radius of tabs
               >
                 <Typography
                   variant="h3"
@@ -174,7 +179,8 @@ export default function Home() {
                   variant="h3" 
                   color={'#333'} 
                   textAlign={'center'} 
-                  paddingX={2}
+                  paddingX='5px'
+                  marginX='5px'
                   border={'1px solid #333'}
                   borderRadius={1}
                   >
