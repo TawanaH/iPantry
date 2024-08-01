@@ -1,10 +1,9 @@
 'use client';
-import { Box, Stack, Typography, Button, Modal, TextField, AppBar, Toolbar, Menu, Container, MenuItem} from "@mui/material";
-import { MenuIcon, RestaurantIcon} from '@mui/icons-material'
+import { Box, Stack, Typography, Button, Modal, TextField} from "@mui/material";
 import {firestore} from '@/firebase'
 import {collection, query, getDocs, setDoc, doc, deleteDoc, getDoc, } from 'firebase/firestore'
 import { useEffect, useState } from "react";
-
+import ResponsiveAppBar from "./ResponsiveAppBar";
 
 export default function Home() {
   const [pantry, setPantry] = useState([])
@@ -12,17 +11,6 @@ export default function Home() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [itemName, setItemName] = useState('');
-  const pages = ['Pantries'];
-
-  const [anchorElNav, setAnchorElNav] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
 
 
   const style = {
@@ -129,11 +117,12 @@ export default function Home() {
               setItemName('')
               handleClose()
             }}
+            sx={{ backgroundColor: '#203354', color: '#FFFFFF'}}
             >Add</Button>
           </Stack>
         </Box>
       </Modal>
-      <Button variant="contained" onClick={handleOpen}>Add</Button>
+      <Button variant="contained" onClick={handleOpen} sx={{ backgroundColor: '#203354'}}>Add</Button>
       <Box
         border={'1px solid #333'}
       >
@@ -180,7 +169,7 @@ export default function Home() {
                 <Box
                 display={'flex'}
                 >
-                  <Button variant="contained" onClick={() => addItem(name)}>+</Button>
+                  <Button variant="contained" onClick={() => addItem(name)} sx={{ backgroundColor: '#203354'}}>+</Button>
                   <Typography 
                   variant="h3" 
                   color={'#333'} 
@@ -191,7 +180,7 @@ export default function Home() {
                   >
                     {count}
                   </Typography>
-                  <Button variant="contained" onClick={() => removeItem(name)}>-</Button>
+                  <Button variant="contained" onClick={() => removeItem(name)} sx={{ backgroundColor: '#203354'}}>-</Button>
                 </Box>
               </Box>
           ))}
@@ -202,116 +191,3 @@ export default function Home() {
 }
 
 
-
-
-
-function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  
-
-  return (
-    <AppBar position="static">
-      <Container 
-        maxWidth="fixed" 
-        sx={{ backgroundColor: '#203354'}}
-        >
-        <Toolbar disableGutters>
-          <RestaurantIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 190,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Pantry Tracker
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <RestaurantIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Pantry Tracker
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
-  );
-}
