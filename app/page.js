@@ -5,13 +5,43 @@ import {collection, query, getDocs, setDoc, doc, deleteDoc, getDoc, } from 'fire
 import { useEffect, useState } from "react";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 
+
+//When update pantry is called, send the list of all pantry items to api then load results
+
+
+
 export default function Home() {
-  const [pantry, setPantry] = useState([])
+  const [pantry, setPantry] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [itemName, setItemName] = useState('');
+  const [recipeList, setRecipeList] = useState('');
+  const OPENROUTER_API_KEY = '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'
 
+  const updateRecipeList = async (pantryList) => {
+    const itemString = pantryList.map(item => `${item.name}: ${item.count}`).join(', ');
+
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "model": "openai/gpt-3.5-turbo",
+        "messages": [
+          {"role": "user", "content": `Give me 3 recipes I can make with ${itemString}`},
+        ],
+      })
+    });
+
+    const JSONresponse = await response.json()
+    const Answer = JSONresponse.choices[0].message.content
+    
+    setRecipeList(Answer);
+    console.log(Answer)
+  }
 
   const style = {
     position: 'absolute',
@@ -37,6 +67,7 @@ export default function Home() {
       pantrylist.push({"name": doc.id, ...doc.data()})
     })
     console.log(pantrylist)
+    updateRecipeList(pantrylist)
     setPantry(pantrylist)
   }
 
