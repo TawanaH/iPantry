@@ -6,9 +6,6 @@ import { useEffect, useState } from "react";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 
 
-//When update pantry is called, send the list of all pantry items to api then load results
-
-
 
 export default function Home() {
   const [pantry, setPantry] = useState([]);
@@ -154,74 +151,125 @@ export default function Home() {
         </Box>
       </Modal>
       <Button variant="contained" onClick={handleOpen} sx={{ backgroundColor: '#203354'}}>Add</Button>
+
+
       <Box
-        border={'1px solid #343c4a'}
-        padding='10px'
-        borderRadius='20px' //Radius of tabs
+        // width="100vw"
+        // height="100vh"
+        display={"flex"}
+        //alignItems={"center"}
+        //flexDirection={'column'}
+        gap={2}
       >
-        <Box 
-        width="800px" 
-        height="100px" 
-        bgcolor={'#203354'} 
-        display={'flex'} 
-        justifyContent={'center'} 
-        alignItems={'center'}
-        marginBottom='10px'
-        borderRadius='20px' //Radius of tabs
-        > 
-          <Typography
-            variant="h2"
-            color={'#FFFFFF'}
-            textAlign={'center'}
-          >
-            Pantry Items
-          </Typography>
-        </Box>
-        <Stack 
-        width="800px" 
-        height="300px" 
-        spacing={2} 
-        overflow={'auto'} 
-        >
-          {pantry.map(({name, count}) => (
-              <Box
-                key={name}
-                width="100%"
-                minHeight="100px"
-                display={'flex'}
-                justifyContent={'space-between'}
-                paddingX={5}
-                alignItems={'center'}
-                bgcolor={'#f0f0f0'}
-                borderRadius='20px' //Radius of tabs
-              >
-                <Typography
-                  variant="h3"
-                  color={'#333'}
-                  textAlign={'center'}
-                >
-                  {name.charAt(0).toUpperCase() + name.slice(1)}
-                </Typography>
-                <Box
-                display={'flex'}
-                >
-                  <Button variant="contained" onClick={() => addItem(name)} sx={{ backgroundColor: '#203354'}}>+</Button>
-                  <Typography 
-                  variant="h3" 
-                  color={'#333'} 
-                  textAlign={'center'} 
-                  paddingX='5px'
-                  marginX='5px'
-                  border={'1px solid #333'}
-                  borderRadius={1}
-                  >
-                    {count}
-                  </Typography>
-                  <Button variant="contained" onClick={() => removeItem(name)} sx={{ backgroundColor: '#203354'}}>-</Button>
-                </Box>
-              </Box>
-          ))}
-        </Stack>
+                    <Box
+                      border={'1px solid #343c4a'}
+                      padding='10px'
+                      borderRadius='20px' //Radius of tabs
+                    >
+                      <Box 
+                      width="800px" 
+                      height="100px" 
+                      bgcolor={'#203354'} 
+                      display={'flex'} 
+                      justifyContent={'center'} 
+                      alignItems={'center'}
+                      marginBottom='10px'
+                      borderRadius='20px' //Radius of tabs
+                      > 
+                        <Typography
+                          variant="h2"
+                          color={'#FFFFFF'}
+                          textAlign={'center'}
+                        >
+                          Pantry Items
+                        </Typography>
+                      </Box>
+                      <Stack 
+                      width="800px" 
+                      height="300px" 
+                      spacing={2} 
+                      overflow={'auto'} 
+                      >
+                        {pantry.map(({name, count}) => (
+                            <Box
+                              key={name}
+                              width="100%"
+                              minHeight="100px"
+                              display={'flex'}
+                              justifyContent={'space-between'}
+                              paddingX={5}
+                              alignItems={'center'}
+                              bgcolor={'#f0f0f0'}
+                              borderRadius='20px' //Radius of tabs
+                            >
+                              <Typography
+                                variant="h3"
+                                color={'#333'}
+                                textAlign={'center'}
+                              >
+                                {name.charAt(0).toUpperCase() + name.slice(1)}
+                              </Typography>
+                              <Box
+                              display={'flex'}
+                              >
+                                <Button variant="contained" onClick={() => addItem(name)} sx={{ backgroundColor: '#203354'}}>+</Button>
+                                <Typography 
+                                variant="h3" 
+                                color={'#333'} 
+                                textAlign={'center'} 
+                                paddingX='5px'
+                                marginX='5px'
+                                border={'1px solid #333'}
+                                borderRadius={1}
+                                >
+                                  {count}
+                                </Typography>
+                                <Button variant="contained" onClick={() => removeItem(name)} sx={{ backgroundColor: '#203354'}}>-</Button>
+                              </Box>
+                            </Box>
+                        ))}
+                      </Stack>
+                    </Box>
+
+
+
+                    <Box
+                      border={'1px solid #343c4a'}
+                      padding='10px'
+                      borderRadius='20px' //Radius of tabs
+                    >
+                      <Box 
+                      width="800px" 
+                      height="100px" 
+                      bgcolor={'#203354'} 
+                      display={'flex'} 
+                      justifyContent={'center'} 
+                      alignItems={'center'}
+                      marginBottom='10px'
+                      borderRadius='20px' //Radius of tabs
+                      > 
+                        <Typography
+                          variant="h2"
+                          color={'#FFFFFF'}
+                          textAlign={'center'}
+                          align="left"
+                        >
+                          Suggested Recipes
+                        </Typography>
+                      </Box>
+
+                      <Typography
+                          variant="h6"
+                          color={'#333'}
+                          textAlign={'center'}
+                          width="800px" 
+                          height="300px" 
+                          overflow={'auto'} 
+                          sx={{ whiteSpace: 'pre-line'}}
+                        >
+                          {recipeList}
+                      </Typography>  
+                    </Box>
       </Box>
     </Box>
   );
