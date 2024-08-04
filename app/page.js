@@ -1,5 +1,4 @@
 "use client";
-require("dotenv").config();
 import {
   Box,
   Stack,
@@ -30,8 +29,6 @@ export default function Home() {
   const handleClose = () => setOpen(false);
   const [itemName, setItemName] = useState("");
   const [recipeList, setRecipeList] = useState("");
-
-  const GOOGLE_API_KEY = "AIzaSyAxzgLGxcmC6Qih3x7ZCeYY5Ih--Q61FVM";
 
   const handleInputChange = (e) => {
     const searchTerm = e.target.value;
@@ -70,7 +67,7 @@ export default function Home() {
   }
 
   const updateRecipeList = async (pantryList) => {
-    const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
+    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
 
     const itemString = pantryList
       .map((item) => `${item.name}: ${item.count}`)
