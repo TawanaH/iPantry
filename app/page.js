@@ -47,20 +47,6 @@ export default function Home() {
     setPantry(filterBySearch);
   };
 
-  function handleSearchClick() {
-    if (searchVal === "") {
-      updatePantry();
-      return;
-    }
-    console.log("THE PANTRY CONTAINS", pantry);
-    const filterBySearch = pantry.filter((item) => {
-      if (item.name.toLowerCase().includes(searchVal.toLowerCase())) {
-        return item;
-      }
-    });
-    setPantry(filterBySearch);
-  }
-
   function handleClear() {
     setSearchVal("");
     updatePantry();
@@ -203,18 +189,11 @@ export default function Home() {
         </Button>
         <TextField
           id="outlined-basic"
-          label="Search"
+          label="Filter"
           variant="outlined"
           value={searchVal}
           onChange={handleInputChange}
         />
-        <Button
-          variant="contained"
-          onClick={handleSearchClick}
-          sx={{ backgroundColor: "#203354" }}
-        >
-          Search
-        </Button>
         <Button
           variant="contained"
           onClick={handleClear}
