@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ResponsiveAppBar from "./ResponsiveAppBar";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 export default function Home() {
   const [pantry, setPantry] = useState([]);
@@ -29,8 +30,8 @@ export default function Home() {
   const handleClose = () => setOpen(false);
   const [itemName, setItemName] = useState("");
   const [recipeList, setRecipeList] = useState("");
-  const OPENROUTER_API_KEY =
-    "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";
+
+  const GOOGLE_API_KEY = "AIzaSyAxzgLGxcmC6Qih3x7ZCeYY5Ih--Q61FVM";
 
   const handleInputChange = (e) => {
     const searchTerm = e.target.value;
@@ -69,32 +70,21 @@ export default function Home() {
   }
 
   const updateRecipeList = async (pantryList) => {
-    // const itemString = pantryList
-    //   .map((item) => `${item.name}: ${item.count}`)
-    //   .join(", ");
-    // const response = await fetch(
-    //   "https://openrouter.ai/api/v1/chat/completions",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       model: "openai/gpt-3.5-turbo",
-    //       messages: [
-    //         {
-    //           role: "user",
-    //           content: `Give me 3 recipes I can make with ${itemString}`,
-    //         },
-    //       ],
-    //     }),
-    //   }
-    // );
-    // const JSONresponse = await response.json();
-    // console.log(JSONresponse)
-    // const Answer = JSONresponse.choices[0].message.content;
-    // setRecipeList(Answer);
+    const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
+
+    const itemString = pantryList
+      .map((item) => `${item.name}: ${item.count}`)
+      .join(", ");
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Give me 3 recipes I can make with ${itemString}`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    console.log(text);
+    setRecipeList(text);
   };
 
   const style = {
@@ -237,14 +227,7 @@ export default function Home() {
         </Button>
       </Box>
 
-      <Box
-        // width="100vw"
-        // height="100vh"
-        display={"flex"}
-        //alignItems={"center"}
-        //flexDirection={'column'}
-        gap={2}
-      >
+      <Box display={"flex"} gap={2}>
         <Box
           border={"1px solid #343c4a"}
           padding="10px"
