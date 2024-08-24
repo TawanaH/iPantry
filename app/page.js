@@ -53,7 +53,9 @@ export default function Home() {
   }
 
   const updateRecipeList = async (pantryList) => {
-    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
+    const genAI = new GoogleGenerativeAI(
+      process.env.NEXT_PUBLIC_GOOGLE_API_KEY
+    );
 
     const itemString = pantryList
       .map((item) => `${item.name}: ${item.count}`)
@@ -130,19 +132,19 @@ export default function Home() {
     <Box
       width="100vw"
       height="100vh"
-      display={"flex"}
-      alignItems={"center"}
-      flexDirection={"column"}
+      display="flex"
+      alignItems="center"
+      flexDirection="column"
       gap={2}
     >
       <Box
-        width="100vw"
-        height="10vw"
-        display={"flex"}
-        alignItems={"center"}
-        flexDirection={"column"}
+        width="100%"
+        height={{ xs: "20vw", md: "10vw" }} // Responsive height
+        display="flex"
+        alignItems="center"
+        flexDirection="column"
       >
-        <ResponsiveAppBar></ResponsiveAppBar>
+        <ResponsiveAppBar />
       </Box>
 
       <Modal
@@ -155,7 +157,7 @@ export default function Home() {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add Item
           </Typography>
-          <Stack widthd="100%" direction={"row"} spacing={2}>
+          <Stack width="100%" direction="row" spacing={2}>
             <TextField
               id="outlined-basic"
               label="Item"
@@ -179,7 +181,7 @@ export default function Home() {
         </Box>
       </Modal>
 
-      <Box display={"flex"} gap={2}>
+      <Box display="flex" flexDirection={{ xs: "column", md: "row" }} gap={2}>
         <Button
           variant="contained"
           onClick={handleOpen}
@@ -203,43 +205,44 @@ export default function Home() {
         </Button>
       </Box>
 
-      <Box display={"flex"} gap={2}>
+      <Box display="flex" flexDirection={{ xs: "column", lg: "row" }} gap={2} paddingX={10}>
         <Box
-          border={"1px solid #343c4a"}
+          border="1px solid #343c4a"
           padding="10px"
-          borderRadius="20px" //Radius of tabs
+          borderRadius="20px"
+          width={{ xs: "100%", lg: "50%" }} // Responsive width
         >
           <Box
-            width="800px"
-            height="100px"
-            bgcolor={"#203354"}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
+            width="100%"
+            height={{ xs: "auto", md: "100px" }}
+            bgcolor="#203354"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             marginBottom="10px"
-            borderRadius="20px" //Radius of tabs
+            borderRadius="20px"
           >
-            <Typography variant="h2" color={"#FFFFFF"} textAlign={"center"}>
+            <Typography variant="h4" color="#FFFFFF" textAlign="center">
               Pantry Items
             </Typography>
           </Box>
-          <Stack width="800px" height="300px" spacing={2} overflow={"auto"}>
+          <Stack width="100%" spacing={2} overflow="auto" height="300px">
             {pantry.map(({ name, count }) => (
               <Box
                 key={name}
                 width="100%"
                 minHeight="100px"
-                display={"flex"}
-                justifyContent={"space-between"}
-                paddingX={5}
-                alignItems={"center"}
-                bgcolor={"#f0f0f0"}
-                borderRadius="20px" //Radius of tabs
+                display="flex"
+                justifyContent="space-between"
+                paddingX={2}
+                alignItems="center"
+                bgcolor="#f0f0f0"
+                borderRadius="20px"
               >
-                <Typography variant="h3" color={"#333"} textAlign={"center"}>
+                <Typography variant="h6" color="#333" textAlign="center">
                   {name.charAt(0).toUpperCase() + name.slice(1)}
                 </Typography>
-                <Box display={"flex"}>
+                <Box display="flex" alignItems="center">
                   <Button
                     variant="contained"
                     onClick={() => addItem(name)}
@@ -248,12 +251,12 @@ export default function Home() {
                     +
                   </Button>
                   <Typography
-                    variant="h3"
-                    color={"#333"}
-                    textAlign={"center"}
+                    variant="h6"
+                    color="#333"
+                    textAlign="center"
                     paddingX="5px"
                     marginX="5px"
-                    border={"1px solid #333"}
+                    border="1px solid #333"
                     borderRadius={1}
                   >
                     {count}
@@ -272,24 +275,25 @@ export default function Home() {
         </Box>
 
         <Box
-          border={"1px solid #343c4a"}
+          border="1px solid #343c4a"
           padding="10px"
-          borderRadius="20px" //Radius of tabs
+          borderRadius="20px"
+          width={{ xs: "100%", lg: "50%" }} // Responsive width
         >
           <Box
-            width="800px"
-            height="100px"
-            bgcolor={"#203354"}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
+            width="100%"
+            height={{ xs: "auto", md: "100px" }}
+            bgcolor="#203354"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             marginBottom="10px"
-            borderRadius="20px" //Radius of tabs
+            borderRadius="20px"
           >
             <Typography
-              variant="h2"
-              color={"#FFFFFF"}
-              textAlign={"center"}
+              variant="h4"
+              color="#FFFFFF"
+              textAlign="center"
               align="left"
             >
               Suggested Recipes
@@ -297,12 +301,11 @@ export default function Home() {
           </Box>
 
           <Typography
-            variant="h6"
-            color={"#333"}
-            textAlign={"center"}
-            width="800px"
-            height="300px"
-            overflow={"auto"}
+            variant="body1"
+            color="#333"
+            textAlign="center"
+            width="100%"
+            overflow="auto"
             sx={{ whiteSpace: "pre-line" }}
           >
             {recipeList}
